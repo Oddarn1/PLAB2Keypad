@@ -2,7 +2,11 @@ import RPi.GPIO as GPIO
 
 class keypad():
 
-    def __init__(self):
+    def setup(self):
         GPIO.setmode(GPIO.BCM)
-        for rp in GPIO:
-            GPIO.setup(rp,GPIO.OUT)
+
+    def do_polling(self):
+        #Determine currently pressed key
+
+    def get_next_signal(self):
+        #Repeated calls to do_polling until something happens
