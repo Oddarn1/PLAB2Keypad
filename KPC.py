@@ -1,3 +1,7 @@
+import LedBoard
+import Keypad
+import FiniteStateMachine
+
 class KPC():
 
 
@@ -18,16 +22,17 @@ class KPC():
         return open(self.__pass_file).readline()==loginText
 
     def validate_passcode_change(self):
-        #Control passcode change, 4 digits long, numbers only, change passcode file
+        # TODO
 
     def light_one_led(self):
-        #Call ledBoard to light led #Lid for Ldur milliseconds
+        self.ledBoard.light_led(self.lid, self.ldur)
+
 
     def flash_leds(self):
-        #Call ledboard to flash all leds
+        self.ledBoard.flash_all_leds(2)
 
     def twinke_leds(self):
-        #I think you understand what this does by now
+        self.ledBoard.twinkle_all_leds(2)
 
     def exit_action(self):
         #Call LED power-down-sequence
