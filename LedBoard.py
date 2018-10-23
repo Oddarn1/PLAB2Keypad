@@ -17,7 +17,7 @@ class LedBoard():
 
     def set_pin(self, pin_index, pin_state):                # copypaste fra nettside, www.pornhub.com
         if pin_state == -1:
-            GPIO.setup(self.pins[pin_index], GPIO.IN)
+            GPIO.setup(self.pins[pin_index], GPIO.OUT)
         else:
             GPIO.setup(self.pins[pin_index], GPIO.OUT)
             GPIO.output(self.pins[pin_index], pin_state)
@@ -30,7 +30,8 @@ class LedBoard():
                 self.set_pin(pin_index, pin_state)
 
             if time.time() > t:                             # vet egt ikke hvordan man skrur av lysene...
-                self.set_pin(led_number, -1)                # men det feilsøker vi oss frem til
+                for i in range(3):
+                    GPIO.output(self.pins[i], 0)              # men det feilsøker vi oss frem til
                 break
 
 
@@ -50,7 +51,7 @@ class LedBoard():
 
             if time.time() > t:                             # stopper etter t sek har gått
                 for led_number in range(len(self.pins)):
-                    self.set_pin(led_number, -1)
+                    GPIO.output(self.pins[self.pin_led_states[led_number][i]], GPIO.LOW)
                 break
 
         #Flash leds with intervals of k seconds
@@ -61,7 +62,8 @@ class LedBoard():
         while True:
             if time.time() > t:                             # stopper loopen etter k sek har gått
                 for led_numbers in range(len(self.pins)):
-                    self.set_pin(led_numbers, -1)
+                    for i in range(3):
+                        GPIO.output(self.pins[self.pin_led_states[led_number][i]], GPIO.LOW)
                 break
 
             self.light_led(current_pin, 0.5)                # kjører light_led() med 0.5 s duration
@@ -76,4 +78,10 @@ class LedBoard():
 if __name__=="__main__":
     led=LedBoard()
     led.setup()
-    led.twinkle_all_leds(10)
+    led.light_led(0,2)
+    led.light_led(1, 2)
+    led.light_led(2, 2)
+    led.light_led(3, 2)
+    led.light_led(4, 2)
+    led.light_led(5, 2)
+    #led.twinkle_all_leds(10)
