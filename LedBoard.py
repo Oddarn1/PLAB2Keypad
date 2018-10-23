@@ -30,8 +30,7 @@ class LedBoard():
                 self.set_pin(pin_index, pin_state)
 
             if time.time() > t:                             # vet egt ikke hvordan man skrur av lysene...
-                for i in range(3):
-                    self.turn_of_leds()                     # men det feilsøker vi oss frem til
+                self.turn_of_leds()                         # men det feilsøker vi oss frem til
                 break
 
 
@@ -46,12 +45,10 @@ class LedBoard():
                         self.set_pin(pin_index, pin_state)
 
             elif time.time() % 2 == 1:                      # skrur av lysene på oddetall
-                for led_number in range(len(self.pins)):
-                    self.turn_of_leds()
+                self.turn_of_leds()
 
             if time.time() > t:                             # stopper etter t sek har gått
-                for led_number in range(len(self.pins)):
-                    self.turn_of_leds()
+                self.turn_of_leds()
                 break
             # Flash leds with intervals of k seconds
 
