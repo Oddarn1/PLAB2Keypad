@@ -31,7 +31,7 @@ class LedBoard():
 
             if time.time() > t:                             # vet egt ikke hvordan man skrur av lysene...
                 for i in range(3):
-                    GPIO.output(self.pin_led_states[led_number], GPIO.LOW)              # men det feilsøker vi oss frem til
+                    self.turn_of_leds()                     # men det feilsøker vi oss frem til
                 break
 
 
@@ -47,14 +47,19 @@ class LedBoard():
 
             elif time.time() % 2 == 1:                      # skrur av lysene på oddetall
                 for led_number in range(len(self.pins)):
-                    self.set_pin(led_number, -1)
+                    self.turn_of_leds()
 
             if time.time() > t:                             # stopper etter t sek har gått
                 for led_number in range(len(self.pins)):
-                    GPIO.output(self.pin_led_states[led_number], GPIO.LOW)
+                    self.turn_of_leds()
                 break
+            # Flash leds with intervals of k seconds
 
-        #Flash leds with intervals of k seconds
+    def turn_of_leds(self):
+        for i in range(3):
+            self.set_pin(i, -1)
+
+
 
     def twinkle_all_leds(self,k):
         t = time.time() + k                                 # setter grensen på k sek
@@ -69,7 +74,7 @@ class LedBoard():
             self.light_led(current_pin, 0.5)                # kjører light_led() med 0.5 s duration
             current_pin += 1
 
-            if current_pin == 2: current_pin = 0            # resetter current_pin
+            if current_pin == 6: current_pin = 0            # resetter current_pin
 
 
         #Twinkle leds in k-lasting sequences
