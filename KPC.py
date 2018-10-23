@@ -27,7 +27,6 @@ class KPC():
     def light_one_led(self):
         self.ledBoard.light_led(self.lid, self.ldur)
 
-
     def flash_leds(self):
         self.ledBoard.flash_all_leds(2)
 
