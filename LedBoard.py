@@ -64,8 +64,7 @@ class LedBoard():
         while True:
             if time.time() > t:                             # stopper loopen etter k sek har gått
                 for led_numbers in range(len(self.pins)):
-                    for i in range(3):
-                        GPIO.output(self.pin_led_states[led_numbers], GPIO.LOW)
+                    self.turn_of_leds()
                 break
 
             self.light_led(current_pin, 0.5)                # kjører light_led() med 0.5 s duration
@@ -80,4 +79,10 @@ class LedBoard():
 if __name__=="__main__":
     led=LedBoard()
     led.setup()
-    led.twinkle_all_leds(10)
+    led.light_led(0,1)
+    led.light_led(1, 1)
+    led.light_led(2, 1)
+    led.light_led(3, 1)
+    led.light_led(4, 1)
+    led.light_led(5, 1)
+
