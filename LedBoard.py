@@ -6,7 +6,7 @@ class LedBoard():
 
     def setup(self):                                        # awesome mother fucking setup!!!
         GPIO.setmode(GPIO.BCM)
-        self.pins = [18, 23, 24]
+        self.pins = [16, 20, 21]
         self.pin_led_states = [[1, 0, -1],  # A
                                 [0, 1, -1],  # B
                                 [-1, 1, 0],  # C
@@ -72,6 +72,10 @@ class LedBoard():
         #Twinkle leds in k-lasting sequences
 
 
+if __name__=="__main__":
+    led=LedBoard()
+    led.setup()
+    led.light_led(3,10)
 
 
 
