@@ -6,6 +6,7 @@ class LedBoard():
 
     def setup(self):                                        # awesome mother fucking setup!!!
         GPIO.setmode(GPIO.BCM)
+        GPIO.setwarnings(False)
         self.pins = [16, 20, 21]
         self.pin_led_states = [[1, 0, -1],  # A
                                 [0, 1, -1],  # B
@@ -39,16 +40,16 @@ class LedBoard():
         t = time.time() + k
         while True:
             if time.time() % 2 == 0:                        # flasher på alle partall... tror jeg
-                for led_number in self.pins:
+                for led_number in range(len(self.pins)):
                     for pin_index, pin_state in enumerate(self.pin_led_states[led_number]):
                         self.set_pin(pin_index, pin_state)
 
             elif time.time() % 2 == 1:                      # skrur av lysene på oddetall
-                for led_number in self.pins:
+                for led_number in range(len(self.pins)):
                     self.set_pin(led_number, -1)
 
             if time.time() > t:                             # stopper etter t sek har gått
-                for led_number in self.pins:
+                for led_number in range(len(self.pins)):
                     self.set_pin(led_number, -1)
                 break
 
@@ -59,14 +60,14 @@ class LedBoard():
         current_pin = 0
         while True:
             if time.time() > t:                             # stopper loopen etter k sek har gått
-                for led_numbers in self.pins:
+                for led_numbers in range(len(self.pins)):
                     self.set_pin(led_numbers, -1)
                 break
 
             self.light_led(current_pin, 0.5)                # kjører light_led() med 0.5 s duration
             current_pin += 1
 
-            if current_pin == 6: current_pin = 0            # resetter current_pin
+            if current_pin == 2: current_pin = 0            # resetter current_pin
 
 
         #Twinkle leds in k-lasting sequences
@@ -75,46 +76,4 @@ class LedBoard():
 if __name__=="__main__":
     led=LedBoard()
     led.setup()
-    led.light_led(3,10)
-
-
-
-'''
-    HER ER DETTE JEG COPYPASTA FRA NETTSIDE!
-    http://book.pythontips.com/en/latest/enumerate.html
-
-    import RPi.GPIO as GPIO
-
-pins = [18, 23, 24]
-
-pin_led_states = [
-  [1, 0, -1], # A
-  [0, 1, -1], # B
-  [-1, 1, 0], # C
-  [-1, 0, 1], # D
-  [1, -1, 0], # E
-  [0, -1, 1]  # F
-]
-
-GPIO.setmode(GPIO.BCM)
-
-def set_pin(pin_index, pin_state):
-    if pin_state == -1:
-        GPIO.setup(pins[pin_index], GPIO.IN)
-    else:
-        GPIO.setup(pins[pin_index], GPIO.OUT)
-        GPIO.output(pins[pin_index], pin_state)
-
-def light_led(led_number):
-    for pin_index, pin_state in enumerate(pin_led_states[led_number]):
-        set_pin(pin_index, pin_state)
-
-set_pin(0, -1)
-set_pin(1, -1)
-set_pin(2, -1)
-
-while True:
-    x = int(raw_input("Pin (0 to 5):"))
-    light_led(x)
-
-'''
+    led.twinkle_all_leds(10)
