@@ -30,7 +30,8 @@ class LedBoard():
                 self.set_pin(pin_index, pin_state)
 
             if time.time() > t:                             # vet egt ikke hvordan man skrur av lysene...
-                self.set_pin(led_number, -1)                # men det feilsøker vi oss frem til
+                for i in range(3):
+                    GPIO.output(self.pin_led_states[led_number], GPIO.LOW)              # men det feilsøker vi oss frem til
                 break
 
 
@@ -50,7 +51,7 @@ class LedBoard():
 
             if time.time() > t:                             # stopper etter t sek har gått
                 for led_number in range(len(self.pins)):
-                    self.set_pin(led_number, -1)
+                    GPIO.output(self.pin_led_states[led_number], GPIO.LOW)
                 break
 
         #Flash leds with intervals of k seconds
@@ -61,7 +62,8 @@ class LedBoard():
         while True:
             if time.time() > t:                             # stopper loopen etter k sek har gått
                 for led_numbers in range(len(self.pins)):
-                    self.set_pin(led_numbers, -1)
+                    for i in range(3):
+                        GPIO.output(self.pin_led_states[led_numbers], GPIO.LOW)
                 break
 
             self.light_led(current_pin, 0.5)                # kjører light_led() med 0.5 s duration
