@@ -1,6 +1,5 @@
 import LedBoard
 import Keypad
-import FiniteStateMachine
 
 class KPC():
 
@@ -31,7 +30,19 @@ class KPC():
 
 
     def validate_passcode_change(self):
-        # TODO
+        password = ""
+        if len(self.buffer) > 3:
+            for elem in self.buffer:
+                if not str(elem).isdigit():
+                    self.led_failure()
+                    return
+                password += str(elem)
+        else:
+            self.led_failure()
+            return
+
+        self.led_success()
+        open(self.__pass_file, 'w').write(password)
 
     def light_one_led(self):
         self.ledBoard.light_led(self.lid, self.ldur)
