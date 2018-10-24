@@ -1,52 +1,52 @@
 import RPi.GPIO as GPIO
 import time
 
-class keypad():
+class Keypad():
 
     def setup(self):
         GPIO.setmode(GPIO.BCM)
         GPIO.setwarnings(False)
-        self.matrix=[['1','2','3'],
-                ['4','5','6'],
-                ['7','8','9'],
-                ['#','0','*']]
+        self.matrix={"1817" : "1", "1827":"2", "1822":"3", "2317":"4", "2327":"5", "2322":"6", "2417":"7", "2427":"8", "2422":"9", "2517":"*", "2527":"0", "2522": "#"}
         self.row_pins=[18,23,24,25]
         self.col_pins=[17,27,22]
-        for j in range(3):
-            GPIO.setup(self.col_pins[j], GPIO.IN,pull_up_down=GPIO.PUD_DOWN)
+        for row in self.row_pins:
+            GPIO.setup(row, GPIO.OUT)
+        for col in self.col_pins:
+            GPIO.setup(col, GPIO.IN,pull_up_down=GPIO.PUD_DOWN)
 
-        for i in range(4):
-            GPIO.setup(self.row_pins[i], GPIO.OUT)
+
 
     def do_polling(self):
         #Determine currently pressed key
-        pressedButton=-1
-        for i in range(4):
-            GPIO.output(self.row_pins[i],GPIO.HIGH)
-            for j in range(3):
-                time.sleep(0.1)
-                if GPIO.input(self.col_pins[j])==GPIO.HIGH:
-                    pressedButton=(i,j)
-            GPIO.output(self.row_pins[i],GPIO.LOW)
-        if pressedButton!=-1:
-            return self.matrix[pressedButton[0]][pressedButton[1]]
-        else:
-            return None
+        pressedButton=None
+        isPressed=False
+        for row in self.row_pins:
+            GPIO.output(row,GPIO.HIGH)
+            for col in self.col_pins:
+                if isPressed==False:
+                    if GPIO.input(col)==GPIO.HIGH:
+                        pressedButton=self.matrix[str(row)+str(col)]
+                        isPressed=True
+            GPIO.output(row,GPIO.LOW)
+            if isPressed==True:
+                break
+        return pressedButton
 
 
     def get_next_signal(self):
-        signal = None
-        while signal == None:
-            signal = self.do_polling()
-
-
-if __name__=="__main__":
-    kp=keypad()
-    kp.setup()
-    string=""
-    while string!="5468":
-        poll=kp.do_polling()
-        if poll!="":
-            print(poll)
-            string+=poll
-    print(string)
+        keys_count=0
+        prev_key=None
+        key_pressed=None
+        while keys_count<100:
+            key_pressed=self.do_polling()
+            if key_pressed is not None:
+                if prev_key is None:
+                    prev_key=key_pressed
+                    keys_count+=1
+                elif prev_key==key_pressed:
+                    keys_count+=1
+                else:
+                    keys_count=0
+                    prev_key=None
+            time.sleep(0.005)
+        return key_pressed
