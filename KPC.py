@@ -59,6 +59,7 @@ class KPC():
 
     def light_one_led(self):
         self.ledBoard.light_led(self.lid, self.ldur)
+        self.ldur = 0
 
     def flash_leds(self):
         self.ledBoard.flash_all_leds(2)
@@ -83,3 +84,12 @@ class KPC():
 
     def led_failure(self):
         self.flash_leds()
+
+    def set_lid(self, led):
+        self.lid = int(led)
+
+    def set_ldur(self, duration):
+        self.ldur += int(duration)
+
+    def append_next_password_digit(self, d):
+        self.buffer.append(str(d))
