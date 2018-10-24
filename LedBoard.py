@@ -48,7 +48,9 @@ class LedBoard():
             self.light_led(current_pin, 0.01)  # kjører light_led() med 0.5 s duration
             current_pin += 1
 
-            if current_pin == 6: current_pin = 0
+            if current_pin == 6:
+                current_pin = 0
+                time.sleep(0.47)
             time.sleep(0.03)
             # Flash leds with intervals of k seconds
 
