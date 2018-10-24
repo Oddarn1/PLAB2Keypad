@@ -9,11 +9,12 @@ class keypad():
         self.matrix={"1817" : "1", "1827":"2", "1822":"3", "2317":"4", "2327":"5", "2322":"6", "2417":"7", "2427":"8", "2422":"9", "2517":"*", "2527":"0", "2522": "#"}
         self.row_pins=[18,23,24,25]
         self.col_pins=[17,27,22]
+        for row in self.row_pins:
+            GPIO.setup(row, GPIO.OUT)
         for col in self.col_pins:
             GPIO.setup(col, GPIO.IN,pull_up_down=GPIO.PUD_DOWN)
 
-        for row in self.row_pins:
-            GPIO.setup(row, GPIO.OUT)
+
 
     def do_polling(self):
         #Determine currently pressed key
@@ -30,22 +31,6 @@ class keypad():
             if isPressed==True:
                 break
         return pressedButton
-    '''
-    def do_polling(self):       #Her er det noe muffins
-        is_key_found = False
-        key = None
-        for row in self.row_pins:
-            GPIO.output(row, GPIO.HIGH)
-            for col in self.col_pins:
-                if is_key_found == False:
-                    if GPIO.input(col) == GPIO.HIGH:
-                        is_key_found = True
-                        key = self.key_dict[str(row)+str(col)]        #Returnerer et tall fra dict
-            GPIO.output(row, GPIO.LOW)
-            if is_key_found == True:
-                break
-        return key
-        '''
 
 
     def get_next_signal(self):
@@ -63,7 +48,7 @@ class keypad():
                 else:
                     keys_count=0
                     prev_key=None
-            time.sleep(0.01)
+            time.sleep(0.010)
         return key_pressed
 
 
