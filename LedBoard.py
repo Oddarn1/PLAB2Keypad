@@ -81,5 +81,5 @@ class LedBoard():
 if __name__=="__main__":
     led=LedBoard()
     led.setup()
-    led.flash_all_leds(10)
+    led.twinkle_all_leds(10)
 
