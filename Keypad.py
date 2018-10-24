@@ -32,7 +32,7 @@ class keypad():
             return self.matrix[pressedButton[0]][pressedButton[1]]
 
 
-    #def get_next_signal(self):
+    def get_next_signal(self):
         #Repeated calls to do_polling until something happens
 
 

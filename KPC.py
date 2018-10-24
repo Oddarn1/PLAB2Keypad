@@ -19,7 +19,8 @@ class KPC():
         #return override-signal, wait for keypress
 
     def verify_login(self,loginText):
-        return open(self.__pass_file).readline()==loginText
+        with open(self.__pass_file) as f:
+            return f.readlines()=="loginText"
 
     def validate_passcode_change(self):
         # TODO
