@@ -18,7 +18,12 @@ class KPC():
         self.led_power_up()
 
     def get_next_signal(self):
-        return self.override if len(self.override) > 0 else self.keypad.get_next_signal()
+        if len(self.override) > 0:
+            tmp = self.override
+            self.override = ''
+            return tmp
+        else:
+            return self.keypad.get_next_signal()
 
     def verify_login(self,loginText):
         if(open(self.__pass_file).readline()==loginText):
@@ -42,10 +47,19 @@ class KPC():
             return
 
         self.led_success()
-        open(self.__pass_file, 'w').write(password)
+        f = open(self.__pass_file, 'w')
+        f.write(password)
+        f.close()
+        self.verify_login(password)
+
+    def reset(self):
+        self.buffer = []
+        self.ldur = 0
+        self.lid = 0
 
     def light_one_led(self):
         self.ledBoard.light_led(self.lid, self.ldur)
+        self.ldur = 0
 
     def flash_leds(self):
         self.ledBoard.flash_all_leds(2)
@@ -71,18 +85,11 @@ class KPC():
     def led_failure(self):
         self.flash_leds()
 
-    def new_password(self):
-        pass
+    def set_lid(self, led):
+        self.lid = int(led)
 
-    def reset_agent(self):
-        pass
+    def set_ldur(self, duration):
+        self.ldur += int(duration)
 
-    def set_lid(self):
-        pass
-
-    def logout(self):
-        pass
-
-    def set_ldur(self):
-        pass
-
+    def append_next_password_digit(self, d):
+        self.buffer.append(str(d))
