@@ -30,10 +30,14 @@ class keypad():
             GPIO.output(self.row_pins[i],GPIO.LOW)
         if pressedButton!=-1:
             return self.matrix[pressedButton[0]][pressedButton[1]]
+        else:
+            return None
 
 
     def get_next_signal(self):
-        #Repeated calls to do_polling until something happens
+        signal = None
+        while signal == None:
+            signal = self.do_polling()
 
 
 if __name__=="__main__":
