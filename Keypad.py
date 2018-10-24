@@ -20,14 +20,17 @@ class keypad():
 
     def do_polling(self):
         #Determine currently pressed key
-        pressedButton=-1
+        pressedButton=None
         for i in range(4):
             GPIO.output(self.row_pins[i],GPIO.HIGH)
             for j in range(3):
-                time.sleep(0.1)
+                time.sleep(0.2)
                 if GPIO.input(self.col_pins[j])==GPIO.HIGH:
                     pressedButton=(i,j)
+                    break
             GPIO.output(self.row_pins[i],GPIO.LOW)
+            if pressedButton!=None:
+                break
         if pressedButton!=-1:
             return self.matrix[pressedButton[0]][pressedButton[1]]
         else:
@@ -38,6 +41,7 @@ class keypad():
         signal = None
         while signal == None:
             signal = self.do_polling()
+        return signal
 
 
 if __name__=="__main__":
