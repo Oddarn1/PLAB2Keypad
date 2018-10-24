@@ -52,6 +52,10 @@ class KPC():
         f.close()
         self.verify_login(password)
 
+    def reset(self):
+        self.buffer = []
+        self.ldur = 0
+        self.lid = 0
 
     def light_one_led(self):
         self.ledBoard.light_led(self.lid, self.ldur)
