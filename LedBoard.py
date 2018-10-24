@@ -37,19 +37,19 @@ class LedBoard():
         #Turn on led #pin_index for duration
 
     def flash_all_leds(self,k):
-        t = time.time() + k
+        t = time.time() + k  # setter grensen på k sek
+        current_pin = 0
         while True:
-            if time.time() % 2 == 0:                        # flasher på alle partall... tror jeg
-                for led_number in range(len(self.pins)):
-                    for pin_index, pin_state in enumerate(self.pin_led_states[led_number]):
-                        self.set_pin(pin_index, pin_state)
-
-            elif time.time() % 2 == 1:                      # skrur av lysene på oddetall
-                self.turn_of_leds()
-
-            if time.time() > t:                             # stopper etter t sek har gått
-                self.turn_of_leds()
+            if time.time() > t:  # stopper loopen etter k sek har gått
+                for led_numbers in range(len(self.pins)):
+                    self.turn_of_leds()
                 break
+
+            self.light_led(current_pin, 0.01)  # kjører light_led() med 0.5 s duration
+            current_pin += 1
+
+            if current_pin == 6: current_pin = 0
+            time.sleep(0.03)
             # Flash leds with intervals of k seconds
 
     def turn_of_leds(self):
@@ -64,8 +64,7 @@ class LedBoard():
         while True:
             if time.time() > t:                             # stopper loopen etter k sek har gått
                 for led_numbers in range(len(self.pins)):
-                    for i in range(3):
-                        GPIO.output(self.pin_led_states[led_numbers], GPIO.LOW)
+                    self.turn_of_leds()
                 break
 
             self.light_led(current_pin, 0.5)                # kjører light_led() med 0.5 s duration
@@ -80,4 +79,5 @@ class LedBoard():
 if __name__=="__main__":
     led=LedBoard()
     led.setup()
-    led.twinkle_all_leds(10)
+    led.flash_all_leds(10)
+
