@@ -77,9 +77,3 @@ class LedBoard():
 
         #Twinkle leds in k-lasting sequences
 
-
-if __name__=="__main__":
-    led=LedBoard()
-    led.setup()
-    led.twinkle_all_leds(10)
-

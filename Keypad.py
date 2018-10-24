@@ -50,19 +50,3 @@ class Keypad():
                     prev_key=None
             time.sleep(0.005)
         return key_pressed
-
-
-if __name__=="__main__":
-    kp=Keypad()
-    kp.setup()
-    signal=""
-    correct="5463"
-    button=None
-    while button!="*":
-        button=kp.get_next_signal()
-        if button.isdigit():
-            signal+=button
-        print(button)
-    print(signal==correct)
-
-
