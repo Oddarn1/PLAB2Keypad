@@ -1,4 +1,5 @@
 from inspect import isfunction
+import re
 from LedBoard import LedBoard
 from Keypad import keypad
 from KPC import KPC
@@ -39,21 +40,19 @@ class FSM():
         self.agent=KPC(self.keypad,self.ledboard)
         currentState=0
 
-    def make_rules(self):
+    def make_rules(self):           # Need to put in symbols
         all_symbols = []
         not_hashtag = []
         all_numbers = []
         all_leds = []
 
 
-        self.add_rule(Rule("S-Init", "S-Read", all_symbols, self.agent.init))
-        self.add_rule(Rule("S-Read", "S-Read", all_numbers, self.agent.get_next_signal()))
-        self.add_rule(Rule("S-Read", "S-Verify", not_hashtag, self.agent.verify_login(lgihruilghwr78o)))
-        self.add_rule(Rule("S-Read", "S-init", all_symbols, SEND TILBAKE TIL INITSTATE))
-        '''
-        self.add_rule(Rule("S-Verify", "S-Active", Y???, FULLY ACTIVATE AGENT))
-        self.add_rule(Rule("S-Verify", "S-init", all_symbols, RESET AGENT))
-        '''
+        self.add_rule(Rule("S-Init", "S-Read", all_symbols, self.agent.init))                                       # Rule 1
+        self.add_rule(Rule("S-Read", "S-Read", all_numbers, self.agent.get_next_signal()))                          # Rule 2
+        self.add_rule(Rule("S-Read", "S-Verify", not_hashtag, self.agent.verify_login(lgihruilghwr78o)))            # Rule 3
+        self.add_rule(Rule("S-Read", "S-init", re.match('^[0-9]*', all_symbols), SEND TILBAKE TIL INITSTATE))       # Rule 4, all symbols except digits and *
+        self.add_rule(Rule("S-Verify", "S-Active", 'Y', FULLY ACTIVATE AGENT))                                      # Rule 5,
+        self.add_rule(Rule("S-Verify", "S-init", re.match('^Y', all_symbols), self.agent.reset()))                  # Rule 6, all symbols except Y
 
 
 class Rule:
