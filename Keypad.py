@@ -48,5 +48,22 @@ class Keypad():
                 else:
                     keys_count=0
                     prev_key=None
-            time.sleep(0.005)
+            time.sleep(0.01)
         return key_pressed
+
+
+if __name__ == "__main__":
+    kp=Keypad()
+    kp.setup()
+    actualpw="5431"
+    password=""
+    while True:
+        signal=kp.get_next_signal()
+        if signal=='*' and actualpw==password:
+            print(password)
+            break
+        elif signal=='*':
+            print(password)
+            password=''
+        password+=signal
+        print(signal)

@@ -10,6 +10,8 @@ class KPC():
         self.__pass_file="passcode.txt"
         self.buffer = []
         self.override = ''
+        self.current_key=None
+        self.tmpPassChange=""
         self.lid=0
         self.ldur=0
 
@@ -21,12 +23,24 @@ class KPC():
         if len(self.override) > 0:
             tmp = self.override
             self.override = ''
+            self.current_key=tmp
             return tmp
         else:
-            return self.keypad.get_next_signal()
+            tmp=self.keypad.get_next_signal()
+            self.current_key = tmp
+            if tmp.isdigit():
+                self.append_next_password_digit()
+            return tmp
 
-    def verify_login(self,loginText):
-        if(open(self.__pass_file).readline()==loginText):
+    def verify_login(self):
+        password=""
+        for char in self.buffer:
+            password+=char
+        print(password)
+        self.buffer=[]
+        with open(self.__pass_file) as f:
+            actualpw=f.readline()
+        if(int(actualpw)==int(password)):
             self.override = 'Y'
             self.led_success()
         else:
@@ -47,10 +61,23 @@ class KPC():
             return
 
         self.led_success()
-        f = open(self.__pass_file, 'w')
-        f.write(password)
-        f.close()
-        self.verify_login(password)
+        if password==self.tmpPassChange:
+            f = open(self.__pass_file, 'w')
+            f.write(password)
+            f.close()
+            self.buffer=[]
+            self.tmpPassChange=""
+        else:
+            self.led_failure()
+            return
+
+    def store_password_change(self):
+        if len(self.buffer)>3:
+            for char in self.buffer:
+                self.tmpPassChange+=char
+        else:
+            self.led_failure()
+        self.buffer=[]
 
     def reset(self):
         self.buffer = []
@@ -71,10 +98,10 @@ class KPC():
         self.ledBoard.light_led(0, 0.2)
         self.ledBoard.light_led(1, 0.2)
         self.ledBoard.light_led(2, 0.2)
-        self.ledBoard.twinkle_all_leds(0.2)
+        self.ledBoard.twinkle_all_leds(1)
 
     def led_power_up(self):
-        self.ledBoard.twinkle_all_leds(0.2)
+        self.ledBoard.twinkle_all_leds(1)
         self.ledBoard.light_led(3, 0.2)
         self.ledBoard.light_led(4, 0.2)
         self.ledBoard.light_led(5, 0.2)
@@ -91,5 +118,5 @@ class KPC():
     def set_ldur(self, duration):
         self.ldur += int(duration)
 
-    def append_next_password_digit(self, d):
-        self.buffer.append(str(d))
+    def append_next_password_digit(self):
+        self.buffer.append(self.current_key)

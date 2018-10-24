@@ -33,6 +33,7 @@ class FSM:
         # use the consequent of a rule to:
         # a) set the next state of the FSM, and
         # b) call the appropriate agent action method
+        self.current_state=rule.next_state
         if self.signal_is_digit(signal):
             rule.action(signal)
         else:
@@ -43,7 +44,7 @@ class FSM:
             x = rule.signal(s)
         else:
             x = (rule.signal == s)
-        return x and self.current_state == rule.state1
+        return x and self.current_state == rule.current_state
 
     def apply_rule(self, rule, signal):
         # Control if rule-conditions are met
@@ -68,11 +69,19 @@ class FSM:
         self.add_rule(verify_rule)
         verify2_rule = Rule("S_verify", "S_init", "N", self.agent.reset)            # self.agent.reset_agent ???
         self.add_rule(verify2_rule)
-        active1_rule = Rule("S_active", "S_read", "*", self.agent.new_password)
+        active1_rule = Rule("S_active", "S_read2", "*", self.agent.init_passcode_entry)
         self.add_rule(active1_rule)
+        read4_rule= Rule("S_read2","S_read2",self.signal_is_digit,self.agent.append_next_password_digit)
+        self.add_rule(read4_rule)
+        read5_rule=Rule("S_read2","S_read3","*",self.agent.store_password_change)
+        self.add_rule(read5_rule)
+        read6_rule=Rule("S_read3","S_read3",self.signal_is_digit,self.agent.append_next_password_digit)
+        self.add_rule(read6_rule)
+        verify3_rule=Rule("S_read3","S_active","*",self.agent.validate_passcode_change)
+        self.add_rule(verify3_rule)
         active2_rule = Rule("S_active", "S_led", self.signal_is_digit, self.agent.set_lid)
         self.add_rule(active2_rule)
-        active3_rule = Rule("S_active", "S_logout", "#", self.agent.logout)
+        active3_rule = Rule("S_active", "S_logout", "#", self.agent.init_passcode_entry)
         self.add_rule(active3_rule)
         led_rule = Rule("S_led", "S_time", self.signal_is_digit, self.agent.set_ldur)
         self.add_rule(led_rule)
@@ -98,13 +107,16 @@ class FSM:
 class Rule:
     def __init__(self,current_state,next_state, signal, action):
         self.next_state = next_state
+        self.current_state=current_state
         self.signal = signal
         self.action = action
 
 
 def main_loop():
     kp=Keypad()
+    kp.setup()
     lb=LedBoard()
+    lb.setup()
     agent = KPC(kp,lb)
     fsm = FSM(agent)
     fsm.make_all_rules()
