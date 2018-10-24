@@ -18,7 +18,12 @@ class KPC():
         self.led_power_up()
 
     def get_next_signal(self):
-        return self.override if len(self.override) > 0 else self.keypad.get_next_signal()
+        if len(self.override) > 0:
+            tmp = self.override
+            self.override = ''
+            return tmp
+        else:
+            return self.keypad.get_next_signal()
 
     def verify_login(self,loginText):
         if(open(self.__pass_file).readline()==loginText):
@@ -42,7 +47,11 @@ class KPC():
             return
 
         self.led_success()
-        open(self.__pass_file, 'w').write(password)
+        f = open(self.__pass_file, 'w')
+        f.write(password)
+        f.close()
+        self.verify_login(password)
+
 
     def light_one_led(self):
         self.ledBoard.light_led(self.lid, self.ldur)
