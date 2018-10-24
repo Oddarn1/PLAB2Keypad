@@ -1,7 +1,7 @@
 import RPi.GPIO as GPIO
 import time
 
-class keypad():
+class Keypad():
 
     def setup(self):
         GPIO.setmode(GPIO.BCM)
@@ -48,13 +48,21 @@ class keypad():
                 else:
                     keys_count=0
                     prev_key=None
-            time.sleep(0.010)
+            time.sleep(0.005)
         return key_pressed
 
 
 if __name__=="__main__":
-    kp=keypad()
+    kp=Keypad()
     kp.setup()
-    button=kp.get_next_signal()
-    print(button)
+    signal=""
+    correct="5463"
+    button=None
+    while button!="*":
+        button=kp.get_next_signal()
+        if button.isdigit():
+            signal+=button
+        print(button)
+    print(signal==correct)
+
 
