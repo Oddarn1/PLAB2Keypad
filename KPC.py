@@ -1,5 +1,5 @@
-import LedBoard
-import Keypad
+from Keypad import Keypad
+from LedBoard import LedBoard
 
 class KPC():
 
