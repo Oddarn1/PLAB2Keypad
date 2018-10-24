@@ -70,3 +70,19 @@ class KPC():
 
     def led_failure(self):
         self.flash_leds()
+
+    def new_password(self):
+        pass
+
+    def reset_agent(self):
+        pass
+
+    def set_lid(self):
+        pass
+
+    def logout(self):
+        pass
+
+    def set_ldur(self):
+        pass
+
