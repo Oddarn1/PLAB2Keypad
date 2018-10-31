@@ -34,13 +34,10 @@ class FSM:
         # a) set the next state of the FSM, and
         # b) call the appropriate agent action method
         self.current_state=rule.next_state
-        if self.signal_is_digit(signal):
-            rule.action(signal)
-        else:
-            rule.action()
+        rule.action()
 
     def matches(self, rule, s):
-        if inspect.ismethod(rule.signal):
+        if inspect.isfunction(rule.signal):
             x = rule.signal(s)
         else:
             x = (rule.signal == s)
@@ -71,6 +68,10 @@ class FSM:
         self.add_rule(verify2_rule)
         active1_rule = Rule("S_active", "S_read2", "*", self.agent.init_passcode_entry)
         self.add_rule(active1_rule)
+        active2_rule = Rule("S_active", "S_led", self.signal_is_digit, self.agent.append_next_password_digit)
+        self.add_rule(active2_rule)
+        active3_rule = Rule("S_active", "S_logout", "#", self.agent.init_passcode_entry)
+        self.add_rule(active3_rule)
         read4_rule= Rule("S_read2","S_read2",self.signal_is_digit,self.agent.append_next_password_digit)
         self.add_rule(read4_rule)
         read5_rule=Rule("S_read2","S_read3","*",self.agent.store_password_change)
@@ -79,14 +80,8 @@ class FSM:
         self.add_rule(read6_rule)
         verify3_rule=Rule("S_read3","S_active","*",self.agent.validate_passcode_change)
         self.add_rule(verify3_rule)
-        active2_rule = Rule("S_active", "S_led", self.signal_is_digit, self.agent.set_lid)
-        self.add_rule(active2_rule)
-        active3_rule = Rule("S_active", "S_logout", "#", self.agent.init_passcode_entry)
-        self.add_rule(active3_rule)
-        led_rule = Rule("S_led", "S_time", self.signal_is_digit, self.agent.set_ldur)
+        led_rule = Rule("S_led", "S_time", self.signal_is_digit, self.agent.append_next_password_digit)
         self.add_rule(led_rule)
-        time_rule = Rule("S_time", "S_time", self.signal_is_digit, self.agent.set_ldur)
-        self.add_rule(time_rule)
         light_rule = Rule("S_time", "S_active", "*", self.agent.light_one_led)
         self.add_rule(light_rule)
         logout_rule = Rule("S_logout", "S_done", "#", self.agent.exit_action)

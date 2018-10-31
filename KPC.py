@@ -28,8 +28,6 @@ class KPC():
         else:
             tmp=self.keypad.get_next_signal()
             self.current_key = tmp
-            if tmp.isdigit():
-                self.append_next_password_digit()
             return tmp
 
     def verify_login(self):
@@ -46,6 +44,7 @@ class KPC():
         else:
             self.override = 'N'
             self.led_failure()
+        self.current_key=None
 
 
     def validate_passcode_change(self):
@@ -83,10 +82,14 @@ class KPC():
         self.buffer = []
         self.ldur = 0
         self.lid = 0
+        self.tmpPassChange=''
 
     def light_one_led(self):
+        self.set_lid()
+        self.set_ldur()
         self.ledBoard.light_led(self.lid, self.ldur)
         self.ldur = 0
+        self.buffer=[]
 
     def flash_leds(self):
         self.ledBoard.flash_all_leds(2)
@@ -112,11 +115,11 @@ class KPC():
     def led_failure(self):
         self.flash_leds()
 
-    def set_lid(self, led):
-        self.lid = int(led)
+    def set_lid(self):
+        self.lid = int(self.buffer[0])
 
-    def set_ldur(self, duration):
-        self.ldur += int(duration)
+    def set_ldur(self):
+        self.ldur = int(self.buffer[1])
 
     def append_next_password_digit(self):
         self.buffer.append(self.current_key)

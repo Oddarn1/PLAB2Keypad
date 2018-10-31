@@ -15,7 +15,7 @@ class LedBoard():
                                 [1, -1, 0],  # E
                                 [0, -1, 1]]  # F
 
-    def set_pin(self, pin_index, pin_state):                # copypaste fra nettside, www.pornhub.com
+    def set_pin(self, pin_index, pin_state):                # inspirert fra nettside linket i oppgave
         if pin_state == -1:
             GPIO.setup(self.pins[pin_index], GPIO.IN)
         else:
@@ -25,12 +25,12 @@ class LedBoard():
 
     def light_led(self, led_number, duration):
         t = time.time() + duration
-        while True:                                         # copypaste fra nettiden, krysser fingra
+        while True:                                         # inspirert fra nettside linket i oppgave
             for pin_index, pin_state in enumerate(self.pin_led_states[led_number]):
                 self.set_pin(pin_index, pin_state)
 
-            if time.time() > t:                             # vet egt ikke hvordan man skrur av lysene...
-                self.turn_off_leds()                         # men det feilsøker vi oss frem til
+            if time.time() > t:
+                self.turn_off_leds()
                 break
 
 
